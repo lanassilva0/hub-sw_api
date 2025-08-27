@@ -6,5 +6,5 @@ export class User {
   locale?: string;
   createdAt: Date;
   updatedAt: Date;
-  status: Boolean;
+  status: boolean;
 }
