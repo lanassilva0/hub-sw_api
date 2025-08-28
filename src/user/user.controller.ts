@@ -1,4 +1,12 @@
-import { Controller, Get, NotFoundException, Param, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Put,
+  Post,
+  Body,
+} from '@nestjs/common';
 import { UserService } from './shared/user.service';
 import { User } from './shared/user';
 
@@ -27,5 +35,10 @@ export class UserController {
       throw new NotFoundException('User not found');
     }
     return user;
+  }
+
+  @Post()
+  async createUser(@Body() userData: User): Promise<User> {
+    return this.userService.create(userData);
   }
 }
