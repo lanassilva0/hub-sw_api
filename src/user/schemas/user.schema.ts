@@ -6,7 +6,7 @@ import { HydratedDocument } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({ collection: 'emioloTeste' })
 export class User {
   @Prop()
   googleId: number;
