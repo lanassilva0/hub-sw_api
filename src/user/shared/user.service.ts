@@ -8,7 +8,7 @@ export class UserService {
   constructor(@InjectModel('User') private userModel: Model<User>) {}
 
   async findById(id: string) {
-    return await this.userModel.findOne({ googleId: id }).exec();
+    return await this.userModel.findOne({ _id: id }).exec();
   }
 
   async getAll() {
