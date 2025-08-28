@@ -1,12 +1,36 @@
-import * as mongoose from 'mongoose';
+// import * as mongoose from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
-export const UserSchema = new mongoose.Schema({
-  googleId: Number,
-  name: String,
-  email: String,
-  avatar: String,
-  locale: String,
-  createdAt: Date,
-  updatedAt: Date,
-  status: Boolean,
-});
+// export const UserSchema = new mongoose.Schema(
+
+export type UserDocument = HydratedDocument<User>;
+
+@Schema()
+export class User {
+  @Prop()
+  googleId: number;
+
+  @Prop()
+  name: string;
+
+  @Prop()
+  email: string;
+
+  @Prop()
+  avatar: string;
+
+  @Prop()
+  locale: string;
+
+  @Prop()
+  createdAt: Date;
+
+  @Prop()
+  updatedAt: Date;
+
+  @Prop()
+  status: boolean;
+}
+
+export const UserSchema = SchemaFactory.createForClass(User);
