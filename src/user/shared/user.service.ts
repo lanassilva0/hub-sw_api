@@ -1,83 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { User } from './user';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class UserService {
-  users: User[] = [
-    {
-      googleId: 101,
-      name: 'Alice Johnson',
-      email: 'alice.johnson@example.com',
-      avatar: 'https://avatars.googleusercontent.com/u/101',
-      locale: 'en-US',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      status: true,
-    },
-    {
-      googleId: 102,
-      name: 'Bruno Silva',
-      email: 'bruno.silva@example.com',
-      avatar: 'https://avatars.googleusercontent.com/u/102',
-      locale: 'pt-BR',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      status: true,
-    },
-    {
-      googleId: 103,
-      name: 'Carlos Rodriguez',
-      email: 'carlos.rodriguez@example.com',
-      avatar: 'https://avatars.googleusercontent.com/u/103',
-      locale: 'es-ES',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      status: false,
-    },
-    {
-      googleId: 104,
-      name: 'Diana Smith',
-      email: 'diana.smith@example.com',
-      avatar: 'https://avatars.googleusercontent.com/u/104',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      status: true,
-    },
-    {
-      googleId: 105,
-      name: 'Elena Petrov',
-      email: 'elena.petrov@example.com',
-      avatar: 'https://avatars.googleusercontent.com/u/105',
-      locale: 'ru-RU',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      status: false,
-    },
-  ];
+  constructor(@InjectModel('User') private userModel: Model<User>) {}
 
-  findById(id: number) {
-    const userFind = this.users.find((user) => user.googleId === id);
-
-    return userFind;
+  async findById(id: string) {
+    return await this.userModel.findOne({ googleId: id }).exec();
   }
 
-  findByEmail(email: string) {
-    return this.users.find((user) => user.email === email);
+  async getAll() {
+    return await this.userModel.find().exec();
   }
 
-  create(userData: User) {
-    console.log(userData);
+  async findByEmail(email: string) {
+    return await this.userModel.findOne({ email }).exec();
   }
 
-  findOrCreate(userData: User) {
-    console.log(userData);
+  async findOrCreate(userData: User) {
+    const user = await this.findByEmail(userData.email);
+    if (user) {
+      return user;
+    }
+    return await this.create(userData);
   }
 
-  getAll() {
-    return [];
+  async create(userData: User) {
+    const createdUser = new this.userModel(userData);
+    return await createdUser.save();
   }
 
-  disableUser(id: number) {
-    return this.users[id];
+  async disableUser(id: string) {
+    await this.userModel.findByIdAndUpdate(id, { isActive: false }).exec();
+    return this.userModel.findById(id);
   }
 }
