@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/require-await */
 import { Controller, Get, NotFoundException, Param, Put } from '@nestjs/common';
 import { UserService } from './shared/user.service';
 import { User } from './shared/user';
@@ -14,7 +13,7 @@ export class UserController {
 
   @Get(':id')
   async getUserById(@Param('id') id: string): Promise<User> {
-    const user = this.userService.findById(parseInt(id, 10));
+    const user = await this.userService.findById(id);
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -23,6 +22,10 @@ export class UserController {
 
   @Put(':id')
   async updateUser(@Param('id') id: string): Promise<User> {
-    return this.userService.disableUser(parseInt(id, 10));
+    const user = await this.userService.disableUser(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 }
