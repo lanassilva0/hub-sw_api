@@ -28,12 +28,21 @@ export class UserService {
   }
 
   async create(userData: User) {
-    const createdUser = new this.userModel(userData);
+    const user = await this.findByEmail(userData.email);
+    if (user) {
+      return user;
+    }
+    const createdUser = new this.userModel({
+      ...userData,
+      createdAt: new Date(),
+    });
     return await createdUser.save();
   }
 
   async disableUser(id: string) {
-    await this.userModel.findByIdAndUpdate(id, { isActive: false }).exec();
+    await this.userModel
+      .findByIdAndUpdate(id, { status: true, updatedAt: new Date() })
+      .exec();
     return this.userModel.findById(id);
   }
 }
