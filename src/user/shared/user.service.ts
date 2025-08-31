@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { User } from './user';
+import { CurrentUser } from './user';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private userModel: Model<User>) {}
+  constructor(@InjectModel('User') private userModel: Model<CurrentUser>) {}
 
   async findById(id: string) {
     return await this.userModel.findOne({ _id: id }).exec();
@@ -19,7 +19,7 @@ export class UserService {
     return await this.userModel.findOne({ email }).exec();
   }
 
-  async findOrCreate(userData: User) {
+  async findOrCreate(userData: CurrentUser) {
     const user = await this.findByEmail(userData.email);
     if (user) {
       return user;
@@ -27,7 +27,7 @@ export class UserService {
     return await this.create(userData);
   }
 
-  async create(userData: User) {
+  async create(userData: CurrentUser) {
     const user = await this.findByEmail(userData.email);
     if (user) {
       return user;
@@ -44,5 +44,12 @@ export class UserService {
       .findByIdAndUpdate(id, { status: true, updatedAt: new Date() })
       .exec();
     return this.userModel.findById(id);
+  }
+
+  async updateHashedRefreshToken(userId: number, hashedRefreshToken: string) {
+    return await this.userModel.updateOne(
+      { id: userId },
+      { hashedRefreshToken },
+    );
   }
 }
