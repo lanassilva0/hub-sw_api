@@ -9,4 +9,5 @@ export class CurrentUser extends Document {
   updatedAt: Date;
   status: boolean;
   password: string;
+  hashedRefreshToken: string;
 }
