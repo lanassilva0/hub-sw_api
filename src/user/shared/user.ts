@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-export class User extends Document {
+export class CurrentUser extends Document {
   googleId: number;
   name: string;
   email: string;
@@ -8,4 +8,5 @@ export class User extends Document {
   createdAt: Date;
   updatedAt: Date;
   status: boolean;
+  password: string;
 }
