@@ -31,6 +31,9 @@ export class User {
 
   @Prop()
   status: boolean;
+
+  @Prop()
+  password: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
