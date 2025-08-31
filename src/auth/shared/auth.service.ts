@@ -1,16 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { compare } from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/shared/user.service';
-// import type { ConfigType } from '@nestjs/config';
+import { AuthJwtPayload } from '../types/auth-jwtPayload';
+import refreshJwtConfig from '../config/refresh-jwt.config';
+import type { ConfigType } from '@nestjs/config';
 import * as argon2 from 'argon2';
 import { CurrentUser } from 'src/user/shared/user';
 // import { User } from 'src/user/schemas/user.schema';
 
 @Injectable()
 export class AuthService {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private jwtService: JwtService,
+    @Inject(refreshJwtConfig.KEY)
+    private refreshTokenConfig: ConfigType<typeof refreshJwtConfig>,
+  ) {}
 
   async validateUser(email: string, password: string) {
     const user = await this.userService.findByEmail(email);
@@ -35,17 +43,17 @@ export class AuthService {
       refreshToken,
     };
   }
-  //   async generateTokens(userId: number) {
-  //     const payload: AuthJwtPayload = { sub: userId };
-  //     const [accessToken, refreshToken] = await Promise.all([
-  //       this.jwtService.signAsync(payload),
-  //       this.jwtService.signAsync(payload, this.refreshTokenConfig),
-  //     ]);
-  //     return {
-  //       accessToken,
-  //       refreshToken,
-  //     };
-  //   }
+  async generateTokens(userId: number) {
+    const payload: AuthJwtPayload = { sub: userId };
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(payload),
+      this.jwtService.signAsync(payload, this.refreshTokenConfig),
+    ]);
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
 
   async refreshToken(userId: number) {
     const { accessToken, refreshToken } = await this.generateTokens(userId);
@@ -77,12 +85,12 @@ export class AuthService {
     await this.userService.updateHashedRefreshToken(userId, null);
   }
 
-  // async validateJwtUser(userId: string) {
-  //   const user = await this.userService.findById(userId);
-  //   if (!user) throw new UnauthorizedException('User not found!');
-  //   const currentUser: CurrentUser = { id: user.id };
-  //   return currentUser;
-  // }
+  async validateJwtUser(userId: string) {
+    const user = await this.userService.findById(userId);
+    if (!user) throw new UnauthorizedException('User not found!');
+    const currentUser: CurrentUser = { id: user.id };
+    return currentUser;
+  }
 
   async validateGoogleUser(googleUser: CurrentUser) {
     const user = await this.userService.findByEmail(googleUser.email);
