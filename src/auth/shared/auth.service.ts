@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { compare } from 'bcrypt';
 import { UserService } from 'src/user/shared/user.service';
-import { ConfigType } from '@nestjs/config';
+// import type { ConfigType } from '@nestjs/config';
 import * as argon2 from 'argon2';
-import { CurrentUser } from './types/current-user';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CurrentUser } from 'src/user/shared/user';
+// import { User } from 'src/user/schemas/user.schema';
 
 @Injectable()
 export class AuthService {
@@ -56,8 +58,8 @@ export class AuthService {
     };
   }
 
-  async validateRefreshToken(userId: number, refreshToken: string) {
-    const user = await this.userService.findOne(userId);
+  async validateRefreshToken(userId: string, refreshToken: string) {
+    const user = await this.userService.findById(userId);
     if (!user || !user.hashedRefreshToken)
       throw new UnauthorizedException('Invalid Refresh Token');
 
@@ -75,14 +77,14 @@ export class AuthService {
     await this.userService.updateHashedRefreshToken(userId, null);
   }
 
-  async validateJwtUser(userId: number) {
-    const user = await this.userService.findOne(userId);
-    if (!user) throw new UnauthorizedException('User not found!');
-    const currentUser: CurrentUser = { id: user.id, role: user.role };
-    return currentUser;
-  }
+  // async validateJwtUser(userId: string) {
+  //   const user = await this.userService.findById(userId);
+  //   if (!user) throw new UnauthorizedException('User not found!');
+  //   const currentUser: CurrentUser = { id: user.id };
+  //   return currentUser;
+  // }
 
-  async validateGoogleUser(googleUser: CreateUserDto) {
+  async validateGoogleUser(googleUser: CurrentUser) {
     const user = await this.userService.findByEmail(googleUser.email);
     if (user) return user;
     return await this.userService.create(googleUser);
