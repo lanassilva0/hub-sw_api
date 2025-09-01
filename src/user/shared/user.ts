@@ -1,4 +1,5 @@
 import { Document } from 'mongoose';
+import { Role } from 'src/auth/enums/role.enum';
 export class CurrentUser extends Document {
   googleId: number;
   name: string;
@@ -10,4 +11,5 @@ export class CurrentUser extends Document {
   status: boolean;
   password: string;
   hashedRefreshToken: string;
+  role: Role;
 }
