@@ -82,13 +82,13 @@ export class AuthService {
   }
 
   async signOut(userId: number) {
-    await this.userService.updateHashedRefreshToken(userId, null);
+    await this.userService.updateHashedRefreshToken(userId, '');
   }
 
   async validateJwtUser(userId: string) {
     const user = await this.userService.findById(userId);
     if (!user) throw new UnauthorizedException('User not found!');
-    const currentUser: CurrentUser = { id: user.id };
+    const currentUser: CurrentUser = user;
     return currentUser;
   }
 
