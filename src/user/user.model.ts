@@ -14,7 +14,7 @@ export const UserSchema = new mongoose.Schema({
 });
 
 export interface UserModel extends mongoose.Document {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   password: string;
