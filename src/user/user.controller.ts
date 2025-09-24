@@ -7,7 +7,7 @@ import {
   Post,
   Body,
 } from '@nestjs/common';
-import { UserService } from './shared/user.service';
+import { UserService } from './user.service';
 import { CurrentUser } from './shared/user';
 
 @Controller('user')

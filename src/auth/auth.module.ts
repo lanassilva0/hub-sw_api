@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './shared/auth.service';
 import { AuthController } from './auth.controller';
-import { UserService } from 'src/user/shared/user.service';
+import { UserService } from 'src/user/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/user/schemas/user.schema';
 import { LocalStrategy } from './strategies/local.strategies';

@@ -3,7 +3,7 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/user/shared/user.service';
+import { UserService } from 'src/user/user.service';
 import { AuthJwtPayload } from '../types/auth-jwtPayload';
 import refreshJwtConfig from '../config/refresh-jwt.config';
 import type { ConfigType } from '@nestjs/config';
