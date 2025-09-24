@@ -8,19 +8,19 @@ import {
   Body,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CurrentUser } from './shared/user';
+import type { UserModel } from './user.model';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  async getAllUsers(): Promise<CurrentUser[]> {
+  async getAllUsers(): Promise<UserModel[]> {
     return this.userService.getAll();
   }
 
   @Get(':id')
-  async getUserById(@Param('id') id: string): Promise<CurrentUser> {
+  async getUserById(@Param('id') id: string): Promise<UserModel> {
     const user = await this.userService.findById(id);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -29,7 +29,7 @@ export class UserController {
   }
 
   @Put(':id')
-  async updateUser(@Param('id') id: string): Promise<CurrentUser> {
+  async updateUser(@Param('id') id: string): Promise<UserModel> {
     const user = await this.userService.disableUser(id);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -38,7 +38,7 @@ export class UserController {
   }
 
   @Post()
-  async createUser(@Body() userData: CurrentUser): Promise<CurrentUser> {
+  async createUser(@Body() userData: UserModel): Promise<UserModel> {
     return this.userService.create(userData);
   }
 }
