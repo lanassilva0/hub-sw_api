@@ -8,7 +8,7 @@ import { AuthJwtPayload } from '../types/auth-jwtPayload';
 import refreshJwtConfig from '../config/refresh-jwt.config';
 import type { ConfigType } from '@nestjs/config';
 import * as argon2 from 'argon2';
-import { CurrentUser } from 'src/user/shared/user';
+import { UserModel } from 'src/user/user.model';
 // import { User } from 'src/user/schemas/user.schema';
 
 @Injectable()
@@ -88,11 +88,11 @@ export class AuthService {
   async validateJwtUser(userId: string) {
     const user = await this.userService.findById(userId);
     if (!user) throw new UnauthorizedException('User not found!');
-    const currentUser: CurrentUser = user;
-    return currentUser;
+    const userModel: UserModel = user;
+    return userModel;
   }
 
-  async validateGoogleUser(googleUser: CurrentUser) {
+  async validateGoogleUser(googleUser: UserModel) {
     const user = await this.userService.findByEmail(googleUser.email);
     if (user) return user;
     return await this.userService.create(googleUser);

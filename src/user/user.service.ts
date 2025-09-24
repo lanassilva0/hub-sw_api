@@ -48,7 +48,7 @@ export class UserService {
 
   async updateHashedRefreshToken(userId: number, hashedRefreshToken: string) {
     return await this.userModel.updateOne(
-      { id: userId },
+      { _id: userId },
       { hashedRefreshToken },
     );
   }

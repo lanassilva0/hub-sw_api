@@ -19,4 +19,10 @@ export interface UserModel extends mongoose.Document {
   email: string;
   password: string;
   googleId?: string;
+  hashedRefreshToken?: string;
+  avatar?: string;
+  locale?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  status: boolean;
 }
