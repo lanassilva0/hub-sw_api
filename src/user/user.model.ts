@@ -5,9 +5,15 @@ export const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   googleId: { type: String },
+  avatar: { type: String },
+  locale: { type: String },
+  createdAt: { type: Date, default: Date.now },
+  updateAt: { type: Date, default: Date.now },
+  status: { type: Boolean, default: false },
+  hashedRefreshToken: { type: String },
 });
 
-export interface User extends mongoose.Document {
+export interface UserModel extends mongoose.Document {
   id: string;
   name: string;
   email: string;

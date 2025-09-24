@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CurrentUser } from './user';
+import { UserModel } from '../user.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private userModel: Model<CurrentUser>) {}
+  constructor(@InjectModel('User') private userModel: Model<UserModel>) {}
 
   async findById(id: string) {
     return await this.userModel.findOne({ _id: id }).exec();
@@ -19,7 +19,7 @@ export class UserService {
     return await this.userModel.findOne({ email }).exec();
   }
 
-  async findOrCreate(userData: CurrentUser) {
+  async findOrCreate(userData: UserModel) {
     const user = await this.findByEmail(userData.email);
     if (user) {
       return user;
@@ -27,7 +27,7 @@ export class UserService {
     return await this.create(userData);
   }
 
-  async create(userData: CurrentUser) {
+  async create(userData: UserModel) {
     const user = await this.findByEmail(userData.email);
     if (user) {
       return user;
