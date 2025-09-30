@@ -26,3 +26,14 @@ export interface UserModel extends mongoose.Document {
   updatedAt: Date;
   status: boolean;
 }
+
+export interface ICreateGoogleUserDto {
+  googleId: string;
+  email: string;
+  name: string;
+  avatar: string;
+  password?: string;
+  locale?: string;
+  status: boolean;
+  hashedRefreshToken?: string;
+}

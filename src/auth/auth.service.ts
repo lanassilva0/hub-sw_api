@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Model } from 'mongoose';
 import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
@@ -8,8 +9,7 @@ import { AuthJwtPayload } from './types/auth-jwtPayload';
 import refreshJwtConfig from './config/refresh-jwt.config';
 import type { ConfigType } from '@nestjs/config';
 import * as argon2 from 'argon2';
-import { UserModel } from 'src/user/user.model';
-// import { User } from 'src/user/schemas/user.schema';
+import { UserModel, ICreateGoogleUserDto } from 'src/user/user.model';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +18,7 @@ export class AuthService {
     private jwtService: JwtService,
     @Inject(refreshJwtConfig.KEY)
     private refreshTokenConfig: ConfigType<typeof refreshJwtConfig>,
+    private userModel: Model<UserModel>,
   ) {}
 
   async validateUser(email: string, password: string) {
@@ -92,9 +93,12 @@ export class AuthService {
     return userModel;
   }
 
-  async validateGoogleUser(googleUser: UserModel) {
+  async validateGoogleUser(googleUser: ICreateGoogleUserDto) {
     const user = await this.userService.findByEmail(googleUser.email);
     if (user) return user;
-    return await this.userService.create(googleUser);
+    const createdUser = new this.userModel({
+      ...googleUser,
+    });
+    return await this.userService.create(createdUser);
   }
 }
