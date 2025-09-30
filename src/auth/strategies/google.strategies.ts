@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Model } from 'mongoose';
 import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 import googleOauthConfig from '../config/google-oauth.config';
 import type { ConfigType } from '@nestjs/config';
 import { AuthService } from '../auth.service';
-import { UserModel } from '../../user/user.model';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
@@ -15,7 +13,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     @Inject(googleOauthConfig.KEY)
     private googleConfiguration: ConfigType<typeof googleOauthConfig>,
     private authService: AuthService,
-    private userModel: Model<UserModel>,
   ) {
     if (
       !googleConfiguration.clientID ||
