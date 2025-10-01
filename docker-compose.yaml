@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Nome do container
+    container_name: nestjs-app
+    # Mapeia a porta do container (3000) para a porta da sua máquina local (3000)
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+        reservations:
+          memory: 512m
+    ports:
+      - '3000:3000'
+    # environment:
+    #   - MONGO_URI: ${MONGO_URI}
+    env-file:
+      - .env
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+volumes:
+  mongo-data:

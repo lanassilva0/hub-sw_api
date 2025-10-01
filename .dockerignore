@@ -1,0 +1,12 @@
+# Dependências
+node_modules
+# Pasta de build do NestJS (será gerada no container)
+dist
+# Arquivos de log e testes
+npm-debug.log*
+test/
+coverage/
+# Arquivos de configuração/ambiente
+.env
+.git
+.gitignore
