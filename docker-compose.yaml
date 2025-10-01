@@ -15,7 +15,7 @@ services:
         reservations:
           memory: 512m
     ports:
-      - '3000:3000'
+      - 3000:3000
     # environment:
     #   - MONGO_URI: ${MONGO_URI}
     env-file:
